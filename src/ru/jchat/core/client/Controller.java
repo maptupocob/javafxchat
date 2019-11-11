@@ -3,11 +3,9 @@ package ru.jchat.core.client;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -37,6 +35,12 @@ public class Controller implements Initializable {
     TextField loginField;
     @FXML
     PasswordField passField;
+    @FXML
+    VBox participants;
+    @FXML
+    Tab generalTabChat;
+    @FXML
+    TabPane tabPane;
 
 
     private Socket socket;
@@ -50,17 +54,28 @@ public class Controller implements Initializable {
 
     public void setAuthorized(boolean authorized) {
         this.authorized = authorized;
-        if (authorized){
+        if (authorized) {
             msgPanel.setVisible(true);
             msgPanel.setManaged(true);
             authPanel.setVisible(false);
             authPanel.setManaged(false);
+            tabPane.setVisible(true);
+//            generalTabChat.setDisable(false);
         } else {
             msgPanel.setVisible(false);
             msgPanel.setManaged(false);
             authPanel.setVisible(true);
             authPanel.setManaged(true);
+            tabPane.setVisible(false);
+//            generalTabChat.setDisable(true);
         }
+    }
+
+    public void startPrivateChat(String name){
+        Tab newTab = new Tab(name);
+        newTab.setClosable(true);
+        tabPane.getTabs().add(newTab);
+        //TODO
     }
 
     @Override
@@ -74,11 +89,11 @@ public class Controller implements Initializable {
                 try {
                     while (true) {
                         String s = in.readUTF();
-                        if (s.equals("/authok")){
+                        if (s.equals("/authok")) {
                             setAuthorized(true);
                             break;
                         }
-                        if(s.equals("Неверный логин/пароль"))showAlert("Неверный логин/пароль");
+                        if (s.equals("Неверный логин/пароль")) showAlert("Неверный логин/пароль");
 //                        textArea.appendText(s + "\n");
                     }
                     while (true) {
@@ -103,18 +118,20 @@ public class Controller implements Initializable {
         }
     }
 
-    public void sendAuthMsg(){
-        try{
+    public void sendAuthMsg() {
+        try {
             out.writeUTF("/auth " + loginField.getText() + " " + passField.getText());
             loginField.clear();
             passField.clear();
-        } catch (Exception e){
-           showAlert("Не удалось авторизоваться на сервере");
+        } catch (Exception e) {
+            showAlert("Не удалось авторизоваться на сервере");
         }
     }
 
     public void sendMsg() {
         try {
+            String msg = msgField.getText();
+            if (msg.startsWith("/w ")) startPrivateChat(msg.split("\\s")[1]);
             out.writeUTF(msgField.getText());
             msgField.clear();
             msgField.requestFocus();
@@ -123,7 +140,7 @@ public class Controller implements Initializable {
         }
     }
 
-    public void showAlert(String msg){
+    public void showAlert(String msg) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Возникли проблемы");

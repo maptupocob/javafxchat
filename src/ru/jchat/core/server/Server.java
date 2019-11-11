@@ -39,8 +39,10 @@ public class Server {
         if (msg != null) {
             clientHandler.sendMsg(msg);
             if (msg == "NickName is changed") {
+                String oldNick = clientHandler.getNick();
                 clientHandler.setNick(newNick);
-                broadcastMsg(clientHandler.getNick() + " changed Nickname to " + newNick);
+                broadcastMsg(oldNick + " changed Nickname to " + newNick);
+                oldNick = null;
             }
         } else clientHandler.sendMsg("Something went wrong on server");
     }
