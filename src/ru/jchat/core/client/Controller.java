@@ -72,9 +72,10 @@ public class Controller implements Initializable {
     }
 
     public void startPrivateChat(String name){
-        Tab newTab = new Tab(name);
+        DialogTab newTab = new DialogTab(name);
         newTab.setClosable(true);
         tabPane.getTabs().add(newTab);
+        tabPane.getSelectionModel().select(newTab);
         //TODO
     }
 
