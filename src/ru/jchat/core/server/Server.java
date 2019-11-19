@@ -5,8 +5,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
+    public ExecutorService getService() {
+        return service;
+    }
+
+    private ExecutorService service;
     private Vector<ClientHandler> clients;
     private AuthService authService = null;
 
@@ -17,6 +24,7 @@ public class Server {
     public Server() {
         try (ServerSocket serverSocket = new ServerSocket(8189)) {
             clients = new Vector<>();
+            service = Executors.newCachedThreadPool();
             authService = new AuthService();
             authService.connect();
             System.out.println("Server started... Waiting clients...");

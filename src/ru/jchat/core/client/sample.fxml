@@ -15,17 +15,6 @@
             <Button onAction="#sendAuthMsg" text="Авторизоваться" />
         </HBox>
       <TabPane VBox.vgrow="ALWAYS" fx:id="tabPane">
-         <tabs>
-            <Tab fx:id="generalChatTab" closable="false" text="general">
-               <content>
-                    <TextArea fx:id="textArea" editable="false">
-                     <effect>
-                        <Blend />
-                     </effect>
-                  </TextArea>
-               </content>
-            </Tab>
-         </tabs>
       </TabPane>
         <HBox fx:id="msgPanel">
             <TextField fx:id="msgField" onAction="#sendMsg" promptText="Написать сообщение..." HBox.hgrow="ALWAYS" />

@@ -9,15 +9,11 @@ public class DialogTab extends Tab {
     public DialogTab(String text) {
         super(text);
         textArea = new TextArea();
-        this.setClosable(true);
+        this.setClosable(text == "<General>" ? false : true);
         this.setContent(textArea);
     }
 
-    public void setDialogText(String text) {
-        textArea.setText(text);
+    public TextArea getTextArea() {
+        return textArea;
     }
-
-
-
-
 }

@@ -23,8 +23,7 @@ import java.util.ResourceBundle;
 
 
 public class Controller implements Initializable {
-    @FXML
-    TextArea textArea;
+
     @FXML
     TextField msgField;
     @FXML
@@ -38,14 +37,13 @@ public class Controller implements Initializable {
     @FXML
     VBox participants;
     @FXML
-    Tab generalTabChat;
-    @FXML
     TabPane tabPane;
 
 
     private Socket socket;
     private DataOutputStream out;
     private DataInputStream in;
+    private DialogTab activeTab;
 
     final String SERVER_IP = "localhost";
     final int SERVER_PORT = 8189;
@@ -71,14 +69,6 @@ public class Controller implements Initializable {
         }
     }
 
-    public void startPrivateChat(String name){
-        DialogTab newTab = new DialogTab(name);
-        newTab.setClosable(true);
-        tabPane.getTabs().add(newTab);
-        tabPane.getSelectionModel().select(newTab);
-        //TODO
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
@@ -86,6 +76,8 @@ public class Controller implements Initializable {
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
             setAuthorized(false);
+            tabPane.getTabs().add(new DialogTab("<General>"));
+            activeTab = (DialogTab) tabPane.getTabs().get(0);
             Thread t = new Thread(() -> {
                 try {
                     while (true) {
@@ -97,9 +89,10 @@ public class Controller implements Initializable {
                         if (s.equals("Неверный логин/пароль")) showAlert("Неверный логин/пароль");
 //                        textArea.appendText(s + "\n");
                     }
+
                     while (true) {
                         String s = in.readUTF();
-                        textArea.appendText(s + "\n");
+                        activeTab.getTextArea().appendText(s + "\n");
                     }
                 } catch (IOException e) {
                     showAlert("Нет соединения с сервером");
@@ -125,7 +118,7 @@ public class Controller implements Initializable {
             loginField.clear();
             passField.clear();
         } catch (Exception e) {
-            showAlert("Не удалось авторизоваться на сервере");
+            showAlert("Не удалось авторизоваться на сервере/n"+e.getMessage());
         }
     }
 
@@ -139,6 +132,14 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             showAlert("Не удалось отправить сообщение");
         }
+    }
+
+    public void startPrivateChat(String name){
+        DialogTab newTab = new DialogTab(name);
+        newTab.setClosable(true);
+        tabPane.getTabs().add(newTab);
+        tabPane.getSelectionModel().select(newTab);
+        //TODO
     }
 
     public void showAlert(String msg) {
