@@ -2,9 +2,7 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
 <HBox alignment="center" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.jchat.core.client.Controller">
@@ -14,7 +12,7 @@
             <PasswordField fx:id="passField" onAction="#sendAuthMsg" promptText="Пароль" HBox.hgrow="ALWAYS" />
             <Button onAction="#sendAuthMsg" text="Авторизоваться" />
         </HBox>
-      <TabPane VBox.vgrow="ALWAYS" fx:id="tabPane">
+      <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS">
       </TabPane>
         <HBox fx:id="msgPanel">
             <TextField fx:id="msgField" onAction="#sendMsg" promptText="Написать сообщение..." HBox.hgrow="ALWAYS" />
@@ -24,23 +22,13 @@
          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
       </padding>
     </VBox>
-    <VBox fx:id="participants" alignment="TOP_CENTER" prefWidth="200" spacing="10.0">
-        <Label alignment="TOP_CENTER" text="Participants list">
+    <VBox alignment="TOP_CENTER" prefWidth="200" spacing="10.0">
+        <Label alignment="TOP_CENTER" text="Members list">
          <font>
             <Font size="15.0" />
          </font>
-         <effect>
-            <Lighting bumpInput="$null">
-               <light>
-                  <Light.Distant>
-                     <color>
-                        <Color red="0.14802631735801697" green="0.26644736528396606" blue="0.5921052694320679" />
-                     </color>
-                  </Light.Distant>
-               </light>
-            </Lighting>
-         </effect></Label>
-      <ListView prefWidth="200.0" />
+         </Label>
+      <ListView fx:id="memberListView" prefWidth="200.0" />
       <HBox.margin>
          <Insets />
       </HBox.margin>

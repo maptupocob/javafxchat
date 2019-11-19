@@ -1,11 +1,12 @@
 package ru.jchat.core.client;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import ru.jchat.core.Message;
 
 import java.io.DataInputStream;
@@ -13,6 +14,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 //CREATE TABLE users (
@@ -36,7 +38,7 @@ public class Controller implements Initializable {
     @FXML
     PasswordField passField;
     @FXML
-    VBox participants;
+    ListView<String> memberListView;
     @FXML
     TabPane tabPane;
 
@@ -47,6 +49,8 @@ public class Controller implements Initializable {
     private DialogTab activeTab;
     private Message inMessage;
     private Message outMessage;
+    private List<String> chatMembers;
+    private ObservableList<String> observableMemberList = FXCollections.observableArrayList();
 
     final String SERVER_IP = "localhost";
     final int SERVER_PORT = 8189;
@@ -75,6 +79,8 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
+//            observableMemberList.addAll("asd", "asd", "123");
+            memberListView.setItems(observableMemberList);
             socket = new Socket(SERVER_IP, SERVER_PORT);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
@@ -95,7 +101,12 @@ public class Controller implements Initializable {
 
                     while (true) {
                         String s = in.readUTF();
-                        activeTab.getTextArea().appendText(s + "\n");
+                        if (s.startsWith("/list ")){
+                            String[] arr = s.substring(6).split("\\s");
+                            observableMemberList.setAll(arr);
+                        }else {
+                            activeTab.getTextArea().appendText(s + "\n");
+                        }
                     }
                 } catch (IOException e) {
                     showAlert("Нет соединения с сервером");

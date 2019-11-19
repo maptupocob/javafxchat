@@ -38,6 +38,7 @@ public class ClientHandler {
                                 nick = newNick;
                                 sendMsg("/authok");
                                 server.subscribe(this);
+                                server.sendMemberList(nick);
                                 break;
                             } else {
                                 sendMsg("Неверный логин/пароль");

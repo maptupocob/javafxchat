@@ -76,4 +76,14 @@ public class Server {
             o.sendMsg(msg);
         }
     }
+
+    public void sendMemberList(String nick) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("/list ");
+        for (ClientHandler cl: clients) {
+            builder.append(cl.getNick());
+            builder.append(" ");
+        }
+        broadcastMsg(builder.toString());
+    }
 }
