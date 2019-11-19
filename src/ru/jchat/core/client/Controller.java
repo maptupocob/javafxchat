@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import ru.jchat.core.Message;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -44,6 +45,8 @@ public class Controller implements Initializable {
     private DataOutputStream out;
     private DataInputStream in;
     private DialogTab activeTab;
+    private Message inMessage;
+    private Message outMessage;
 
     final String SERVER_IP = "localhost";
     final int SERVER_PORT = 8189;
