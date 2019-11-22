@@ -6,10 +6,11 @@ import javafx.scene.control.TextArea;
 public class DialogTab extends Tab {
     TextArea textArea;
 
-    public DialogTab(String text) {
-        super(text);
+    public DialogTab(String name) {
+        super(name);
+        super.setId(name);
         textArea = new TextArea();
-        this.setClosable(text == "<General>" ? false : true);
+        this.setClosable(name.equals(Controller.GENERAL)? false : true);
         this.setContent(textArea);
     }
 

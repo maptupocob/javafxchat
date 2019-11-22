@@ -1,14 +1,18 @@
 package ru.jchat.core.server;
 
+import ru.jchat.core.Message;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
+
     public ExecutorService getService() {
         return service;
     }
@@ -16,6 +20,7 @@ public class Server {
     private ExecutorService service;
     private Vector<ClientHandler> clients;
     private AuthService authService = null;
+    private Message msg;
 
     public AuthService getAuthService() {
         return authService;
@@ -43,16 +48,20 @@ public class Server {
     }
 
     public void changeNick(ClientHandler clientHandler, String newNick) {
-        String msg = authService.changeNick(clientHandler.getNick(), newNick);
-        if (msg != null) {
+        String result = authService.changeNick(clientHandler.getNick(), newNick);
+        if (result != null) {
+            msg = new Message(Message.PRIVATE_SERVICE_MESSAGE, result, new Date());
             clientHandler.sendMsg(msg);
-            if (msg == "NickName is changed") {
+            if (result == "NickName is changed") {
                 String oldNick = clientHandler.getNick();
                 clientHandler.setNick(newNick);
-                broadcastMsg(oldNick + " changed Nickname to " + newNick);
-                oldNick = null;
+                msg = new Message(Message.BROADCAST_INFORMATION_MESSAGE, oldNick + " changed Nickname to " + newNick, new Date());
+                broadcastMsg(msg);
             }
-        } else clientHandler.sendMsg("Something went wrong on server");
+        } else {
+            msg = new Message(Message.PRIVATE_SERVICE_MESSAGE, "Something went wrong on server", new Date());
+            clientHandler.sendMsg(msg);
+        }
     }
 
     public void subscribe(ClientHandler clientHandler) {
@@ -63,15 +72,15 @@ public class Server {
         clients.remove(clientHandler);
     }
 
-    public void privateMsg(String nick, String msg) {
+    public void privateMsg(Message message) {
         for (ClientHandler o : clients) {
-            if (o.getNick().equals(nick)) {
-                o.sendMsg(msg);
+            if ((o.getNick().equals(message.getAddressNick())) || (o.getNick().equals(message.getSenderNick()))) {
+                o.sendMsg(message);
             }
         }
     }
 
-    public void broadcastMsg(String msg) {
+    public void broadcastMsg(Message msg) {
         for (ClientHandler o : clients) {
             o.sendMsg(msg);
         }
@@ -80,10 +89,11 @@ public class Server {
     public void sendMemberList(String nick) {
         StringBuilder builder = new StringBuilder();
         builder.append("/list ");
-        for (ClientHandler cl: clients) {
+        for (ClientHandler cl : clients) {
             builder.append(cl.getNick());
             builder.append(" ");
         }
-        broadcastMsg(builder.toString());
+        msg = new Message(Message.BROADCAST_SERVICE_MESSAGE, builder.toString(), new Date());
+        broadcastMsg(msg);
     }
 }
