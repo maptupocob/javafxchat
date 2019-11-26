@@ -6,18 +6,14 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Server {
 
-    public ExecutorService getService() {
-        return service;
-    }
-
-    private ExecutorService service;
+    public static final String SERVER_NAME = "serverName";
+    private ArrayList<Thread> threads;
     private Vector<ClientHandler> clients;
     private AuthService authService = null;
     private Message msg;
@@ -29,7 +25,7 @@ public class Server {
     public Server() {
         try (ServerSocket serverSocket = new ServerSocket(8189)) {
             clients = new Vector<>();
-            service = Executors.newCachedThreadPool();
+            threads = new ArrayList<>();
             authService = new AuthService();
             authService.connect();
             System.out.println("Server started... Waiting clients...");
@@ -55,8 +51,9 @@ public class Server {
             if (result == "NickName is changed") {
                 String oldNick = clientHandler.getNick();
                 clientHandler.setNick(newNick);
-                msg = new Message(Message.BROADCAST_INFORMATION_MESSAGE, oldNick + " changed Nickname to " + newNick, new Date());
+                msg = new Message(Message.BROADCAST_SERVICE_MESSAGE, oldNick + " changed Nickname to " + newNick, new Date());
                 broadcastMsg(msg);
+                sendMemberList();
             }
         } else {
             msg = new Message(Message.PRIVATE_SERVICE_MESSAGE, "Something went wrong on server", new Date());
@@ -97,5 +94,43 @@ public class Server {
         }
         msg = new Message(Message.BROADCAST_SERVICE_MESSAGE, builder.toString(), new Date());
         broadcastMsg(msg);
+    }
+
+    public void clientExit(ClientHandler clientHandler) {
+        unsubscribe(clientHandler);
+        msg = new Message(Message.BROADCAST_SERVICE_MESSAGE, "Client " + clientHandler.getNick() + " came out", new Date());
+        broadcastMsg(msg);
+    }
+
+    public boolean closeExistingConnection(String nick) {
+        System.out.println("Check to close " + nick);
+        Message message = new Message(SERVER_NAME, nick, new Date(), Message.PRIVATE_SERVICE_MESSAGE);
+        message.setText("Opened from another place");
+        privateMsg(message);
+        for (Thread thread : threads) {
+            if (thread.getName().equals(nick)) {
+                if (!thread.isAlive()) continue;
+                while (!thread.isInterrupted()) {
+                    thread.interrupt();
+                    threads.remove(thread);
+                    for (ClientHandler o : clients) {
+                        if (o.getNick().equals(nick)) {
+                            unsubscribe(o);
+                            break;
+                        }
+                    }
+                }
+                System.out.println(nick + " closed!!!");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void addNewThread(Runnable run) {
+        Thread thread = new Thread(run);
+        thread.start();
+        threads.add(thread);
     }
 }

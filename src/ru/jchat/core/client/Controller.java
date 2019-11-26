@@ -8,6 +8,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import ru.jchat.core.Message;
 
@@ -104,12 +106,23 @@ public class Controller implements Initializable {
                     while (true) {
                         String s = in.readUTF();
                         inMessage = gson.fromJson(s, Message.class);
-                        if((inMessage.getType() == Message.BROADCAST_SERVICE_MESSAGE) && (inMessage.getText().startsWith("/list "))) {
-                            String[] arr = inMessage.getText().substring(6).split("\\s");
-                            observableMemberList.setAll(arr);
+                        if (inMessage.getType() == Message.BROADCAST_SERVICE_MESSAGE) {
+                            if (inMessage.getText().startsWith("/list ")) {
+                                String[] arr = inMessage.getText().substring(6).split("\\s");
+                                Platform.runLater(() -> observableMemberList.setAll(arr));
+                            } else {
+                                getDialogTab(GENERAL).getTextArea().appendText(inMessage.toString());
+                            }
+                        } else if ((inMessage.getType() == Message.PRIVATE_SERVICE_MESSAGE)) {
+                            if (inMessage.getText().equals("Opened from another place"))
+                                showAlert(inMessage.getText());
+                            else {
+                                getDialogTab(GENERAL).getTextArea().appendText(inMessage.toString());
+                                System.out.println(inMessage);
+                            }
                         } else {
                             System.out.println(s);
-                            String tabName = inMessage.getAddressNick().equals(myNick)?inMessage.getSenderNick():inMessage.getAddressNick();
+                            String tabName = inMessage.getAddressNick().equals(myNick) ? inMessage.getSenderNick() : inMessage.getAddressNick();
                             getDialogTab(tabName).getTextArea().appendText(inMessage.toString());
                         }
                     }
@@ -132,9 +145,9 @@ public class Controller implements Initializable {
     }
 
     private DialogTab getDialogTab(String contactNick) {
-        List<Tab> tabs= tabPane.getTabs();
-        for (Tab tab:tabs) {
-            if (tab.getText().equals(contactNick)){
+        List<Tab> tabs = tabPane.getTabs();
+        for (Tab tab : tabs) {
+            if (tab.getText().equals(contactNick)) {
                 System.out.println(tab.getText());
                 return (DialogTab) tab;
             }
@@ -156,11 +169,15 @@ public class Controller implements Initializable {
             loginField.clear();
             passField.clear();
         } catch (Exception e) {
-            showAlert("Не удалось авторизоваться на сервере/n" + e.getMessage());
+            showAlert("Не удалось авторизоваться на сервере\n" + e.getMessage());
         }
     }
 
     public void sendMsg() {
+        if (msgField.getText().equals("")) {
+            msgField.requestFocus();
+            return;
+        }
         try {
             int type;
             String addressNick = tabPane.getSelectionModel().getSelectedItem().getText();
@@ -176,8 +193,22 @@ public class Controller implements Initializable {
         }
     }
 
-    public void contactClick(){
-//        tabPane.getSelectionModel().select(0);
+    public void changeNick() {
+        Message msg = new Message(Message.PRIVATE_SERVICE_MESSAGE, "/cn " + msgField.getText(), new Date());
+        msgField.clear();
+        msgField.requestFocus();
+        try {
+            out.writeUTF(gson.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void contactClick(MouseEvent event) {
+        if (event.getButton() != MouseButton.PRIMARY){return;}
+        if (memberListView.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
         tabPane.getSelectionModel().select(getDialogTab(memberListView.getSelectionModel().getSelectedItem()));
     }
 
