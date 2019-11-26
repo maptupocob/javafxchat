@@ -2,17 +2,17 @@ package ru.jchat.core.server;
 
 import java.sql.*;
 
-public class AuthService {
+class AuthService {
     private Connection connection;
     private Statement stmt;
 
-    public void connect() throws ClassNotFoundException, SQLException {
+    void connect() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
         connection = DriverManager.getConnection("jdbc:sqlite:main.db");
         stmt = connection.createStatement();
     }
 
-    public String getNickByLoginAndPass(String login, String pass) {
+    String getNickByLoginAndPass(String login, String pass) {
         try {
             ResultSet rs = stmt.executeQuery("SELECT nick FROM users WHERE login = '" + login + "' AND password = '" + pass + "';");
             if (rs.next()) {
@@ -24,7 +24,7 @@ public class AuthService {
         return null;
     }
 
-    public String changeNick(String oldNick, String newNick) {
+    String changeNick(String oldNick, String newNick) {
 
         try {
             ResultSet rs = stmt.executeQuery("SELECT nick FROM users WHERE nick = '" + newNick + "'");
@@ -37,7 +37,7 @@ public class AuthService {
         return null;
     }
 
-    public void disconnect() {
+    void disconnect() {
         try {
             stmt.close();
             connection.close();

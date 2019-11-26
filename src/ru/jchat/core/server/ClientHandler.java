@@ -10,30 +10,29 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Date;
 
-public class ClientHandler {
+class ClientHandler {
     private Server server;
     private Socket socket;
     private DataOutputStream out;
     private DataInputStream in;
     private Message inMessage;
     private Message outMessage;
-    private GsonBuilder builder;
     private Gson gson;
 
 
-    public void setNick(String nick) {
+    void setNick(String nick) {
         this.nick = nick;
     }
 
     private String nick;
 
-    public String getNick() {
+    String getNick() {
         return nick;
     }
 
-    public ClientHandler(Server server, Socket socket) {
+    ClientHandler(Server server, Socket socket) {
         try {
-            builder = new GsonBuilder();
+            GsonBuilder builder = new GsonBuilder();
             gson = builder.create();
             this.server = server;
             this.socket = socket;
@@ -116,7 +115,7 @@ public class ClientHandler {
 
     }
 
-    public void sendMsg(Message msg) {
+    void sendMsg(Message msg) {
         try {
             out.writeUTF(gson.toJson(msg));
         } catch (IOException e) {

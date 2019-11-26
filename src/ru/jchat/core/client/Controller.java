@@ -32,7 +32,7 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-    public static final String GENERAL = "<General>";
+    static final String GENERAL = "<General>";
     @FXML
     TextField msgField;
     @FXML
@@ -55,17 +55,13 @@ public class Controller implements Initializable {
     private String myNick;
     private Message inMessage;
     private Message outMessage;
-    private List<String> chatMembers;
     private ObservableList<String> observableMemberList = FXCollections.observableArrayList();
     private Gson gson = new GsonBuilder().create();
 
-    final String SERVER_IP = "localhost";
-    final int SERVER_PORT = 8189;
+    private final String SERVER_IP = "localhost";
+    private final int SERVER_PORT = 8189;
 
-    private boolean authorized;
-
-    public void setAuthorized(boolean authorized) {
-        this.authorized = authorized;
+    private void setAuthorized(boolean authorized) {
         if (authorized) {
             msgPanel.setVisible(true);
             msgPanel.setManaged(true);
@@ -150,12 +146,7 @@ public class Controller implements Initializable {
             }
         }
         DialogTab newTab = new DialogTab(contactNick);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                tabPane.getTabs().add(newTab);
-            }
-        });
+        Platform.runLater(() -> tabPane.getTabs().add(newTab));
         return newTab;
     }
 
@@ -216,7 +207,7 @@ public class Controller implements Initializable {
         tabPane.getSelectionModel().select(getDialogTab(memberListView.getSelectionModel().getSelectedItem()));
     }
 
-    public void showAlert(String msg) {
+    private void showAlert(String msg) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Возникли проблемы");
