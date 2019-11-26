@@ -61,17 +61,17 @@ public class Server {
         }
     }
 
-    public void subscribe(ClientHandler clientHandler) {
+    public synchronized void subscribe(ClientHandler clientHandler) {
         clients.add(clientHandler);
         sendMemberList();
     }
 
-    public void unsubscribe(ClientHandler clientHandler) {
+    public synchronized void unsubscribe(ClientHandler clientHandler) {
         clients.remove(clientHandler);
         sendMemberList();
     }
 
-    public void privateMsg(Message message) {
+    public synchronized void privateMsg(Message message) {
         for (ClientHandler o : clients) {
             if ((o.getNick().equals(message.getAddressNick())) || (o.getNick().equals(message.getSenderNick()))) {
                 o.sendMsg(message);
@@ -79,13 +79,13 @@ public class Server {
         }
     }
 
-    public void broadcastMsg(Message msg) {
+    public synchronized void broadcastMsg(Message msg) {
         for (ClientHandler o : clients) {
             o.sendMsg(msg);
         }
     }
 
-    public void sendMemberList() {
+    public synchronized void sendMemberList() {
         StringBuilder builder = new StringBuilder();
         builder.append("/list ");
         for (ClientHandler cl : clients) {
@@ -102,7 +102,7 @@ public class Server {
         broadcastMsg(msg);
     }
 
-    public boolean closeExistingConnection(String nick) {
+    public synchronized boolean closeExistingConnection(String nick) {
         System.out.println("Check to close " + nick);
         Message message = new Message(SERVER_NAME, nick, new Date(), Message.PRIVATE_SERVICE_MESSAGE);
         message.setText("Opened from another place");
