@@ -50,7 +50,6 @@ public class Controller implements Initializable {
     private Socket socket;
     private DataOutputStream out;
     private DataInputStream in;
-    //    private DialogTab activeTab;
     private String myNick;
     private Message inMessage;
     private Message outMessage;
@@ -104,11 +103,14 @@ public class Controller implements Initializable {
 
                     while (true) {
                         String s = in.readUTF();
-                        if (s.startsWith("/list ")) {
-                            String[] arr = s.substring(6).split("\\s");
+                        inMessage = gson.fromJson(s, Message.class);
+                        if((inMessage.getType() == Message.BROADCAST_SERVICE_MESSAGE) && (inMessage.getText().startsWith("/list "))) {
+                            String[] arr = inMessage.getText().substring(6).split("\\s");
                             observableMemberList.setAll(arr);
                         } else {
-                            ((DialogTab) tabPane.getSelectionModel().getSelectedItem()).getTextArea().appendText(s + "\n");
+                            System.out.println(s);
+                            String tabName = inMessage.getAddressNick().equals(myNick)?inMessage.getSenderNick():inMessage.getAddressNick();
+                            getDialogTab(tabName).getTextArea().appendText(inMessage.toString());
                         }
                     }
                 } catch (IOException e) {
@@ -129,6 +131,24 @@ public class Controller implements Initializable {
         }
     }
 
+    private DialogTab getDialogTab(String contactNick) {
+        List<Tab> tabs= tabPane.getTabs();
+        for (Tab tab:tabs) {
+            if (tab.getText().equals(contactNick)){
+                System.out.println(tab.getText());
+                return (DialogTab) tab;
+            }
+        }
+        DialogTab newTab = new DialogTab(contactNick);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                tabPane.getTabs().add(newTab);
+            }
+        });
+        return newTab;
+    }
+
     public void sendAuthMsg() {
         try {
             outMessage = new Message(Message.AUTHENTICATION_REQUEST, loginField.getText() + " " + passField.getText(), new Date());
@@ -144,12 +164,10 @@ public class Controller implements Initializable {
         try {
             int type;
             String addressNick = tabPane.getSelectionModel().getSelectedItem().getText();
-            if (addressNick == GENERAL) type = Message.BROADCAST_MESSAGE;
+            if (addressNick.equals(GENERAL)) type = Message.BROADCAST_MESSAGE;
             else type = Message.PRIVATE_MESSAGE;
             outMessage = new Message(myNick, addressNick, new Date(), type);
             outMessage.setText(msgField.getText());
-//            String msg = msgField.getText();
-//            displayMsg(outMessage);
             out.writeUTF(gson.toJson(outMessage));
             msgField.clear();
             msgField.requestFocus();
@@ -158,32 +176,9 @@ public class Controller implements Initializable {
         }
     }
 
-    private void displayMsg(Message msg) {
-        DialogTab dt=null;
-        for (Tab tab : tabPane.getTabs()) {
-            if (tab.getText().equals(msg.getAddressNick())) {
-                dt = (DialogTab) tab;
-                break;
-            }
-        }
-        if (dt == null){
-            dt = new DialogTab(msg.getAddressNick());
-            tabPane.getTabs().add(dt);
-        }
-        tabPane.getSelectionModel().select(dt);
-        dt.getTextArea().setText(msg.getText());
-
-
-//        msg.getAddressNick())startPrivateChat(msg.split("\\s")[1]);
-
-    }
-
-    public void startPrivateChat(String name) {
-        DialogTab newTab = new DialogTab(name);
-        newTab.setClosable(true);
-        tabPane.getTabs().add(newTab);
-        tabPane.getSelectionModel().select(newTab);
-        //TODO
+    public void contactClick(){
+//        tabPane.getSelectionModel().select(0);
+        tabPane.getSelectionModel().select(getDialogTab(memberListView.getSelectionModel().getSelectedItem()));
     }
 
     public void showAlert(String msg) {

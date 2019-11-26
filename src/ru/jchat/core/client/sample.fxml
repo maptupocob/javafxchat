@@ -28,7 +28,7 @@
             <Font size="15.0" />
          </font>
          </Label>
-      <ListView fx:id="memberListView" prefWidth="200.0" />
+      <ListView fx:id="memberListView" onMouseClicked="#contactClick" prefWidth="200.0" />
       <HBox.margin>
          <Insets />
       </HBox.margin>

@@ -61,6 +61,6 @@ public class Message {
 
     @Override
     public String toString() {
-        return sdf.format(date) + " " + senderNick + "\n" + text;
+        return sdf.format(date) + " " + senderNick + "\n" + text+ "\n";
     }
 }

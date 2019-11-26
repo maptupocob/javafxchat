@@ -53,7 +53,6 @@ public class ClientHandler {
                                 outMessage = new Message(Message.AUTHENTICATION_OK, nick, new Date());
                                 sendMsg(outMessage);
                                 server.subscribe(this);
-                                server.sendMemberList(nick);
                                 break;
                             } else {
                                 outMessage = new Message(Message.AUTHENTICATION_DENY, "Неверный логин/пароль", new Date());

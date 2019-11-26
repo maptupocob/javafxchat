@@ -66,10 +66,12 @@ public class Server {
 
     public void subscribe(ClientHandler clientHandler) {
         clients.add(clientHandler);
+        sendMemberList();
     }
 
     public void unsubscribe(ClientHandler clientHandler) {
         clients.remove(clientHandler);
+        sendMemberList();
     }
 
     public void privateMsg(Message message) {
@@ -86,7 +88,7 @@ public class Server {
         }
     }
 
-    public void sendMemberList(String nick) {
+    public void sendMemberList() {
         StringBuilder builder = new StringBuilder();
         builder.append("/list ");
         for (ClientHandler cl : clients) {
