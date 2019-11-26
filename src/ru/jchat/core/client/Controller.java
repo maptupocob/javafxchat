@@ -83,65 +83,62 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            memberListView.setItems(observableMemberList);
-            socket = new Socket(SERVER_IP, SERVER_PORT);
-            in = new DataInputStream(socket.getInputStream());
-            out = new DataOutputStream(socket.getOutputStream());
-            setAuthorized(false);
-            tabPane.getTabs().add(new DialogTab(GENERAL));
-            Thread t = new Thread(() -> {
-                try {
-                    while (true) {
-                        String s = in.readUTF();
-                        inMessage = gson.fromJson(s, Message.class);
-                        if (inMessage.getType() == Message.AUTHENTICATION_OK) {
-                            setAuthorized(true);
-                            myNick = inMessage.getText();
-                            break;
-                        }
-                        if (inMessage.getType() == Message.AUTHENTICATION_DENY) showAlert(inMessage.getText());
-                    }
 
-                    while (true) {
-                        String s = in.readUTF();
-                        inMessage = gson.fromJson(s, Message.class);
-                        if (inMessage.getType() == Message.BROADCAST_SERVICE_MESSAGE) {
-                            if (inMessage.getText().startsWith("/list ")) {
-                                String[] arr = inMessage.getText().substring(6).split("\\s");
-                                Platform.runLater(() -> observableMemberList.setAll(arr));
-                            } else {
-                                getDialogTab(GENERAL).getTextArea().appendText(inMessage.toString());
-                            }
-                        } else if ((inMessage.getType() == Message.PRIVATE_SERVICE_MESSAGE)) {
-                            if (inMessage.getText().equals("Opened from another place"))
-                                showAlert(inMessage.getText());
-                            else {
-                                getDialogTab(GENERAL).getTextArea().appendText(inMessage.toString());
-                                System.out.println(inMessage);
-                            }
-                        } else {
-                            System.out.println(s);
-                            String tabName = inMessage.getAddressNick().equals(myNick) ? inMessage.getSenderNick() : inMessage.getAddressNick();
-                            getDialogTab(tabName).getTextArea().appendText(inMessage.toString());
-                        }
+        memberListView.setItems(observableMemberList);
+        setAuthorized(false);
+        tabPane.getTabs().add(new DialogTab(GENERAL));
+    }
+
+    private void startListeningSocket() {
+        Thread t = new Thread(() -> {
+            try {
+                while (true) {
+                    String s = in.readUTF();
+                    inMessage = gson.fromJson(s, Message.class);
+                    if (inMessage.getType() == Message.AUTHENTICATION_OK) {
+                        setAuthorized(true);
+                        myNick = inMessage.getText();
+                        break;
                     }
-                } catch (IOException e) {
-                    showAlert("Нет соединения с сервером");
-                } finally {
-                    setAuthorized(false);
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        showAlert("Не удалось корректно завершить соединение");
+                    if (inMessage.getType() == Message.AUTHENTICATION_DENY) showAlert(inMessage.getText());
+                }
+
+                while (true) {
+                    String s = in.readUTF();
+                    inMessage = gson.fromJson(s, Message.class);
+                    if (inMessage.getType() == Message.BROADCAST_SERVICE_MESSAGE) {
+                        if (inMessage.getText().startsWith("/list ")) {
+                            String[] arr = inMessage.getText().substring(6).split("\\s");
+                            Platform.runLater(() -> observableMemberList.setAll(arr));
+                        } else {
+                            getDialogTab(GENERAL).getTextArea().appendText(inMessage.toString());
+                        }
+                    } else if ((inMessage.getType() == Message.PRIVATE_SERVICE_MESSAGE)) {
+                        if (inMessage.getText().equals("Opened from another place"))
+                            showAlert(inMessage.getText());
+                        else {
+                            getDialogTab(GENERAL).getTextArea().appendText(inMessage.toString());
+                            System.out.println(inMessage);
+                        }
+                    } else {
+                        System.out.println(s);
+                        String tabName = inMessage.getAddressNick().equals(myNick) ? inMessage.getSenderNick() : inMessage.getAddressNick();
+                        getDialogTab(tabName).getTextArea().appendText(inMessage.toString());
                     }
                 }
-            });
-            t.setDaemon(true);
-            t.start();
-        } catch (IOException e) {
-            showAlert("Невозможно подключиться к серверу");
-        }
+            } catch (IOException e) {
+                showAlert("Нет соединения с сервером");
+            } finally {
+                setAuthorized(false);
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    showAlert("Не удалось корректно завершить соединение");
+                }
+            }
+        });
+        t.setDaemon(true);
+        t.start();
     }
 
     private DialogTab getDialogTab(String contactNick) {
@@ -164,10 +161,15 @@ public class Controller implements Initializable {
 
     public void sendAuthMsg() {
         try {
+            socket = new Socket(SERVER_IP, SERVER_PORT);
+            in = new DataInputStream(socket.getInputStream());
+            out = new DataOutputStream(socket.getOutputStream());
+            startListeningSocket();
             outMessage = new Message(Message.AUTHENTICATION_REQUEST, loginField.getText() + " " + passField.getText(), new Date());
             out.writeUTF(gson.toJson(outMessage));
             loginField.clear();
             passField.clear();
+
         } catch (Exception e) {
             showAlert("Не удалось авторизоваться на сервере\n" + e.getMessage());
         }
@@ -205,7 +207,9 @@ public class Controller implements Initializable {
     }
 
     public void contactClick(MouseEvent event) {
-        if (event.getButton() != MouseButton.PRIMARY){return;}
+        if (event.getButton() != MouseButton.PRIMARY) {
+            return;
+        }
         if (memberListView.getSelectionModel().getSelectedItem() == null) {
             return;
         }
