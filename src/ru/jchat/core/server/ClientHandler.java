@@ -12,6 +12,13 @@ import java.util.Date;
 
 class ClientHandler {
     private Server server;
+    private Socket socket;
+    private DataOutputStream out;
+    private DataInputStream in;
+    private Message inMessage;
+    private Message outMessage;
+    private Gson gson;
+    private String nick;
 
     ClientHandler(Server server, Socket socket) {
         try {
@@ -96,25 +103,15 @@ class ClientHandler {
         }
     }
 
-    private Socket socket;
-    private DataOutputStream out;
-    private DataInputStream in;
-    private Message inMessage;
-    private Message outMessage;
-    private Gson gson;
-
-
     void setNick(String nick) {
         this.nick = nick;
     }
-
-    private String nick;
 
     String getNick() {
         return nick;
     }
 
-    public Socket getSocket() {
+    Socket getSocket() {
         return socket;
     }
 

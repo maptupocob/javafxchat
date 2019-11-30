@@ -29,6 +29,10 @@ class Server {
         return authService;
     }
 
+    Logger getLog() {
+        return log;
+    }
+
     Server() {
         try (ServerSocket serverSocket = new ServerSocket(8189)) {
             setLogging();
@@ -153,9 +157,5 @@ class Server {
         Thread thread = new Thread(run);
         thread.start();
         threads.add(thread);
-    }
-
-    public Logger getLog() {
-        return log;
     }
 }
