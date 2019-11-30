@@ -13,9 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import ru.jchat.core.Message;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.util.Date;
@@ -50,7 +48,7 @@ public class Controller implements Initializable {
     private Message outMessage;
     private final ObservableList<String> observableMemberList = FXCollections.observableArrayList();
     private final Gson gson = new GsonBuilder().create();
-
+    private String path = "history/";
     private final String SERVER_IP = "localhost";
     private final int SERVER_PORT = 8189;
 
@@ -72,10 +70,9 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         memberListView.setItems(observableMemberList);
         setAuthorized(false);
-        tabPane.getTabs().add(getDialogTab(GENERAL));
+//        getDialogTab(GENERAL);
     }
 
     private void startListeningSocket() {
@@ -106,11 +103,10 @@ public class Controller implements Initializable {
                     } else if (inMessage.getType() == Message.BROADCAST_INFORMATION_MESSAGE) {
                         displayAndSaveMessage(GENERAL, inMessage);
                     } else if (inMessage.getType() == Message.PRIVATE_SERVICE_MESSAGE) {
-                        if (inMessage.getText().equals("Opened from another place")){
+                        if (inMessage.getText().equals("Opened from another place")) {
                             showAlert(inMessage.getText());
                             break;
-                        }
-                        else {
+                        } else {
                             displayAndSaveMessage(GENERAL, inMessage);
                             System.out.println(inMessage);
                         }
@@ -137,17 +133,39 @@ public class Controller implements Initializable {
 
     private void displayAndSaveMessage(String nickName, Message msg) {
         getDialogTab(nickName).getTextArea().appendText(msg.toString());
+        String fileName = nickName.equals(GENERAL) ? "General" : nickName;
+        String filePath = path + "/" + myNick + "/";
+        File directory = new File(filePath);
+        if (!directory.exists()) directory.mkdirs();
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath + fileName + ".his", true))) {
+            writer.println(gson.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private DialogTab getDialogTab(String contactNick) {
+    private DialogTab getDialogTab(String nickName) {
         List<Tab> tabs = tabPane.getTabs();
         for (Tab tab : tabs) {
-            if (tab.getText().equals(contactNick)) {
+            if (tab.getText().equals(nickName)) {
                 return (DialogTab) tab;
             }
         }
-        DialogTab newTab = new DialogTab(contactNick);
+        DialogTab newTab = new DialogTab(nickName);
         Platform.runLater(() -> tabPane.getTabs().add(newTab));
+        String fileName = nickName.equals(GENERAL) ? "General" : nickName;
+        String filePath = path + "/" + myNick + "/";
+        File directory = new File(filePath);
+        if (!directory.exists()) directory.mkdirs();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath + fileName + ".his"))) {
+            String msg = null;
+            while ((msg = reader.readLine()) != null) {
+                newTab.getTextArea().appendText(gson.fromJson(msg, Message.class).toString());
+            }
+        } catch (IOException e) {
+//            e.printStackTrace();
+        }
+        newTab.getTextArea().appendText("---------------------------------------------------------" + "\n");
         return newTab;
     }
 
