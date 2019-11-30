@@ -22,14 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
-//CREATE TABLE users (
-//    id       INTEGER PRIMARY KEY AUTOINCREMENT,
-//            login    TEXT    UNIQUE,
-//            password TEXT,
-//            nick     TEXT    UNIQUE
-//            );
-
-
+@SuppressWarnings("WeakerAccess")
 public class Controller implements Initializable {
 
     static final String GENERAL = "<General>";
@@ -55,8 +48,8 @@ public class Controller implements Initializable {
     private String myNick;
     private Message inMessage;
     private Message outMessage;
-    private ObservableList<String> observableMemberList = FXCollections.observableArrayList();
-    private Gson gson = new GsonBuilder().create();
+    private final ObservableList<String> observableMemberList = FXCollections.observableArrayList();
+    private final Gson gson = new GsonBuilder().create();
 
     private final String SERVER_IP = "localhost";
     private final int SERVER_PORT = 8189;
@@ -162,7 +155,6 @@ public class Controller implements Initializable {
             out.writeUTF(gson.toJson(outMessage));
             loginField.clear();
             passField.clear();
-
         } catch (Exception e) {
             showAlert("Не удалось авторизоваться на сервере\n" + e.getMessage());
         }
@@ -218,5 +210,4 @@ public class Controller implements Initializable {
             alert.showAndWait();
         });
     }
-
 }

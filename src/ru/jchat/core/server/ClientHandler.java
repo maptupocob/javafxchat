@@ -12,23 +12,6 @@ import java.util.Date;
 
 class ClientHandler {
     private Server server;
-    private Socket socket;
-    private DataOutputStream out;
-    private DataInputStream in;
-    private Message inMessage;
-    private Message outMessage;
-    private Gson gson;
-
-
-    void setNick(String nick) {
-        this.nick = nick;
-    }
-
-    private String nick;
-
-    String getNick() {
-        return nick;
-    }
 
     ClientHandler(Server server, Socket socket) {
         try {
@@ -55,14 +38,13 @@ class ClientHandler {
                                     nick = newNick;
                                     server.closeExistingConnection(newNick);
                                     Thread.currentThread().setName(nick);
-
-//                                System.out.println(nick);
                                     outMessage = new Message(Message.AUTHENTICATION_OK, nick, new Date());
                                     sendMsg(outMessage);
                                     server.subscribe(this);
                                     break;
                                 } else {
                                     outMessage = new Message(Message.AUTHENTICATION_DENY, "Неверный логин/пароль", new Date());
+                                    server.getLog().warning(socket.getInetAddress() + " Неверный логин/пароль " + data[0]);
                                     sendMsg(outMessage);
                                 }
                             }
@@ -107,12 +89,33 @@ class ClientHandler {
                         e.printStackTrace();
                     }
                 }
-                System.out.println(nick + " thread is closed");
+                server.getLog().info(nick + " thread is closed");
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    private Socket socket;
+    private DataOutputStream out;
+    private DataInputStream in;
+    private Message inMessage;
+    private Message outMessage;
+    private Gson gson;
+
+
+    void setNick(String nick) {
+        this.nick = nick;
+    }
+
+    private String nick;
+
+    String getNick() {
+        return nick;
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 
     void sendMsg(Message msg) {

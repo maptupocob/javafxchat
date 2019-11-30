@@ -4,7 +4,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 
 class DialogTab extends Tab {
-    private TextArea textArea;
+    private final TextArea textArea;
 
     DialogTab(String name) {
         super(name);
