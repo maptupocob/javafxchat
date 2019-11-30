@@ -75,7 +75,7 @@ public class Controller implements Initializable {
 
         memberListView.setItems(observableMemberList);
         setAuthorized(false);
-        tabPane.getTabs().add(new DialogTab(GENERAL));
+        tabPane.getTabs().add(getDialogTab(GENERAL));
     }
 
     private void startListeningSocket() {
@@ -100,21 +100,24 @@ public class Controller implements Initializable {
                             String[] arr = inMessage.getText().substring(6).split("\\s");
                             Platform.runLater(() -> observableMemberList.setAll(arr));
                         } else {
-                            getDialogTab(GENERAL).getTextArea().appendText(inMessage.toString());
+//                            for future feature
+//                            displayAndSaveMessage(GENERAL, inMessage);
                         }
-                    } else if ((inMessage.getType() == Message.PRIVATE_SERVICE_MESSAGE)) {
+                    } else if (inMessage.getType() == Message.BROADCAST_INFORMATION_MESSAGE) {
+                        displayAndSaveMessage(GENERAL, inMessage);
+                    } else if (inMessage.getType() == Message.PRIVATE_SERVICE_MESSAGE) {
                         if (inMessage.getText().equals("Opened from another place")){
                             showAlert(inMessage.getText());
                             break;
                         }
                         else {
-                            getDialogTab(GENERAL).getTextArea().appendText(inMessage.toString());
+                            displayAndSaveMessage(GENERAL, inMessage);
                             System.out.println(inMessage);
                         }
                     } else {
                         System.out.println(s);
                         String tabName = inMessage.getAddressNick().equals(myNick) ? inMessage.getSenderNick() : inMessage.getAddressNick();
-                        getDialogTab(tabName).getTextArea().appendText(inMessage.toString());
+                        displayAndSaveMessage(tabName, inMessage);
                     }
                 }
             } catch (IOException e) {
@@ -132,11 +135,14 @@ public class Controller implements Initializable {
         t.start();
     }
 
+    private void displayAndSaveMessage(String nickName, Message msg) {
+        getDialogTab(nickName).getTextArea().appendText(msg.toString());
+    }
+
     private DialogTab getDialogTab(String contactNick) {
         List<Tab> tabs = tabPane.getTabs();
         for (Tab tab : tabs) {
             if (tab.getText().equals(contactNick)) {
-                System.out.println(tab.getText());
                 return (DialogTab) tab;
             }
         }

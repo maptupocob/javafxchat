@@ -83,11 +83,11 @@ class ClientHandler {
                         }
                     }
                 } catch (IOException e) {
-                    if (e.getMessage().equals("Connection reset")) {
-                        server.clientExit(this);
+                    if ((e.getMessage() != null) && (e.getMessage().equals("Connection reset"))) {
                     } else {
-                        e.printStackTrace();
+//                        e.printStackTrace();
                     }
+                    server.unsubscribe(this);
                 } finally {
                     server.unsubscribe(this);
                     try {

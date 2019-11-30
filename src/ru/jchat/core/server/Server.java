@@ -74,7 +74,7 @@ class Server {
             if (result.equals("NickName is changed")) {
                 String oldNick = clientHandler.getNick();
                 clientHandler.setNick(newNick);
-                msg = new Message(Message.BROADCAST_SERVICE_MESSAGE, oldNick + " changed Nickname to " + newNick, new Date());
+                msg = new Message(Message.BROADCAST_INFORMATION_MESSAGE, oldNick + " changed Nickname to " + newNick, new Date());
                 log.info(oldNick + " changed Nickname to " + newNick);
                 broadcastMsg(msg);
                 sendMemberList();
@@ -89,6 +89,8 @@ class Server {
         if (clients.add(clientHandler)) {
             log.info("Client " + clientHandler.getNick() + " on " + clientHandler.getSocket().getInetAddress() + " came in");
             sendMemberList();
+            msg = new Message(Message.BROADCAST_INFORMATION_MESSAGE, clientHandler.getNick() + " came in chat!", new Date());
+            broadcastMsg(msg);
         }
     }
 
@@ -96,6 +98,8 @@ class Server {
         if (clients.remove(clientHandler)) {
             log.info("Client " + clientHandler.getNick() + " on " + clientHandler.getSocket().getInetAddress() + " came out");
             sendMemberList();
+            msg = new Message(Message.BROADCAST_INFORMATION_MESSAGE, clientHandler.getNick() + " came out chat!", new Date());
+            broadcastMsg(msg);
         }
     }
 
@@ -121,12 +125,6 @@ class Server {
             builder.append(" ");
         }
         msg = new Message(Message.BROADCAST_SERVICE_MESSAGE, builder.toString(), new Date());
-        broadcastMsg(msg);
-    }
-
-    void clientExit(ClientHandler clientHandler) {
-        unsubscribe(clientHandler);
-        msg = new Message(Message.BROADCAST_SERVICE_MESSAGE, "Client " + clientHandler.getNick() + " came out", new Date());
         broadcastMsg(msg);
     }
 
