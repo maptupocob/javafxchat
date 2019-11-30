@@ -110,8 +110,10 @@ public class Controller implements Initializable {
                             getDialogTab(GENERAL).getTextArea().appendText(inMessage.toString());
                         }
                     } else if ((inMessage.getType() == Message.PRIVATE_SERVICE_MESSAGE)) {
-                        if (inMessage.getText().equals("Opened from another place"))
+                        if (inMessage.getText().equals("Opened from another place")){
                             showAlert(inMessage.getText());
+                            break;
+                        }
                         else {
                             getDialogTab(GENERAL).getTextArea().appendText(inMessage.toString());
                             System.out.println(inMessage);
