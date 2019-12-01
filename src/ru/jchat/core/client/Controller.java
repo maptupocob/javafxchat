@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -59,12 +60,14 @@ public class Controller implements Initializable {
             authPanel.setVisible(false);
             authPanel.setManaged(false);
             tabPane.setVisible(true);
+            memberListView.setVisible(true);
         } else {
             msgPanel.setVisible(false);
             msgPanel.setManaged(false);
             authPanel.setVisible(true);
             authPanel.setManaged(true);
             tabPane.setVisible(false);
+            memberListView.setVisible(false);
         }
     }
 
@@ -72,7 +75,13 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         memberListView.setItems(observableMemberList);
         setAuthorized(false);
-//        getDialogTab(GENERAL);
+        memberListView.setCellFactory(TextFieldListCell.forListView());
+    }
+
+    public void rightClick() {
+        if (!memberListView.getSelectionModel().getSelectedItem().equals(myNick)) return;
+        int index = memberListView.getSelectionModel().getSelectedIndex();
+        memberListView.edit(index);
     }
 
     private void startListeningSocket() {
@@ -204,8 +213,9 @@ public class Controller implements Initializable {
         }
     }
 
-    public void changeNick() {
-        Message msg = new Message(Message.PRIVATE_SERVICE_MESSAGE, "/cn " + msgField.getText(), new Date());
+    public void changeNick(ListView.EditEvent editEvent) {
+        if (editEvent.getNewValue().equals("")) return;
+        Message msg = new Message(Message.PRIVATE_SERVICE_MESSAGE, "/cn " + editEvent.getNewValue(), new Date());
         msgField.clear();
         msgField.requestFocus();
         try {
