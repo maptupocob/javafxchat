@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
-@SuppressWarnings("WeakerAccess")
 public class Controller implements Initializable {
 
     static final String GENERAL = "<General>";
@@ -110,6 +109,15 @@ public class Controller implements Initializable {
 //                            displayAndSaveMessage(GENERAL, inMessage);
                         }
                     } else if (inMessage.getType() == Message.BROADCAST_INFORMATION_MESSAGE) {
+                        if (inMessage.getText().contains("changed Nickname to")) {
+                            String oldNick = inMessage.getText().split("\\s")[0];
+                            String newNick = inMessage.getText().split("\\s")[4];
+                            changeTabNameAndFileName(oldNick, newNick);
+                            if (oldNick.equals(myNick)) {
+                                changeHistoryFolderName(newNick);
+                                myNick = newNick;
+                            }
+                        }
                         displayAndSaveMessage(GENERAL, inMessage);
                     } else if (inMessage.getType() == Message.PRIVATE_SERVICE_MESSAGE) {
                         if (inMessage.getText().equals("Opened from another place")) {
@@ -138,6 +146,31 @@ public class Controller implements Initializable {
         });
         t.setDaemon(true);
         t.start();
+    }
+
+    private void changeHistoryFolderName(String newNick) {
+        File historyFile = new File(path + "/" + myNick);
+        if (historyFile.exists()) {
+            historyFile.renameTo(new File(path + "/" + newNick));
+        }
+    }
+
+    private void changeTabNameAndFileName(String oldNick, String newNick) {
+        List<Tab> tabs = tabPane.getTabs();
+        for (Tab tab : tabs) {
+            if (tab.getText().equals(oldNick)) {
+                Platform.runLater(() -> {
+                            tab.setId(newNick);
+                            tab.setText(newNick);
+                        }
+                );
+            }
+        }
+        String fullPath = path + myNick + "/";
+        File historyFile = new File(fullPath + oldNick + ".his");
+        if (historyFile.exists()) {
+            historyFile.renameTo(new File(fullPath + newNick + ".his"));
+        }
     }
 
     private void displayAndSaveMessage(String nickName, Message msg) {
