@@ -77,12 +77,6 @@ public class Controller implements Initializable {
         memberListView.setCellFactory(TextFieldListCell.forListView());
     }
 
-    public void rightClick() {
-        if (!memberListView.getSelectionModel().getSelectedItem().equals(myNick)) return;
-        int index = memberListView.getSelectionModel().getSelectedIndex();
-        memberListView.edit(index);
-    }
-
     private void startListeningSocket() {
         Thread t = new Thread(() -> {
             try {
@@ -246,8 +240,14 @@ public class Controller implements Initializable {
         }
     }
 
+    public void rightClick() {
+        if (!memberListView.getSelectionModel().getSelectedItem().equals(myNick)) return;
+        int index = memberListView.getSelectionModel().getSelectedIndex();
+        memberListView.edit(index);
+    }
+
     public void changeNick(ListView.EditEvent editEvent) {
-        if (editEvent.getNewValue().equals("")) return;
+        if (editEvent.getNewValue().equals("") || editEvent.getNewValue().equals(myNick)) return;
         Message msg = new Message(Message.PRIVATE_SERVICE_MESSAGE, "/cn " + editEvent.getNewValue(), new Date());
         msgField.clear();
         msgField.requestFocus();

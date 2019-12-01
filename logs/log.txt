@@ -686,3 +686,321 @@ INFO: nick1123 changed Nickname to nick1
 INFO: Client nick1 on /127.0.0.1 came out
 2019.12.01 13:14:51 MSK ThreadID: 23
 INFO: nick1 thread is closed
+2019.12.01 13:31:37 MSK ThreadID: 1
+INFO: Server started... Waiting clients...
+2019.12.01 13:31:48 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53026 8189
+2019.12.01 13:31:48 MSK ThreadID: 12
+INFO: Client nick1 on /127.0.0.1 came in
+2019.12.01 13:32:53 MSK ThreadID: 12
+INFO: nick1 changed Nickname to nick11
+2019.12.01 13:33:49 MSK ThreadID: 12
+INFO: nick11 changed Nickname to nick1
+2019.12.01 13:35:13 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53057 8189
+2019.12.01 13:35:13 MSK ThreadID: 13
+INFO: Client nick1 on /127.0.0.1 came out
+2019.12.01 13:35:13 MSK ThreadID: 13
+INFO: Thread of nick1 closed because was opened from another place
+2019.12.01 13:35:13 MSK ThreadID: 12
+INFO: nick1 thread is closed
+2019.12.01 13:35:13 MSK ThreadID: 13
+INFO: Client nick1 on /127.0.0.1 came in
+2019.12.01 13:37:36 MSK ThreadID: 13
+INFO: Client nick1 on /127.0.0.1 came out
+2019.12.01 13:37:36 MSK ThreadID: 13
+INFO: nick1 thread is closed
+2019.12.01 13:38:43 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53110 8189
+2019.12.01 13:38:43 MSK ThreadID: 14
+INFO: Client nick1 on /127.0.0.1 came in
+2019.12.01 13:38:54 MSK ThreadID: 14
+INFO: nick1 changed Nickname to nick11
+2019.12.01 13:40:11 MSK ThreadID: 14
+INFO: Client nick11 on /127.0.0.1 came out
+2019.12.01 13:40:11 MSK ThreadID: 14
+INFO: nick11 thread is closed
+2019.12.01 13:42:27 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53147 8189
+2019.12.01 13:42:27 MSK ThreadID: 15
+INFO: Client nick11 on /127.0.0.1 came in
+2019.12.01 13:42:37 MSK ThreadID: 15
+INFO: nick11 changed Nickname to nick1
+2019.12.01 13:43:15 MSK ThreadID: 15
+INFO: Client nick1 on /127.0.0.1 came out
+2019.12.01 13:43:15 MSK ThreadID: 15
+INFO: nick1 thread is closed
+2019.12.01 13:44:23 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53182 8189
+2019.12.01 13:44:23 MSK ThreadID: 16
+INFO: Client nick1 on /127.0.0.1 came in
+2019.12.01 13:44:36 MSK ThreadID: 16
+INFO: nick1 changed Nickname to nick11
+2019.12.01 13:45:13 MSK ThreadID: 16
+INFO: Client nick11 on /127.0.0.1 came out
+2019.12.01 13:45:13 MSK ThreadID: 16
+INFO: nick11 thread is closed
+2019.12.01 13:45:25 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53194 8189
+2019.12.01 13:45:25 MSK ThreadID: 17
+INFO: Client nick11 on /127.0.0.1 came in
+2019.12.01 13:45:29 MSK ThreadID: 17
+INFO: nick11 changed Nickname to nick1
+2019.12.01 13:45:40 MSK ThreadID: 17
+INFO: Client nick1 on /127.0.0.1 came out
+2019.12.01 13:45:40 MSK ThreadID: 17
+INFO: nick1 thread is closed
+2019.12.01 13:46:54 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53219 8189
+2019.12.01 13:46:54 MSK ThreadID: 18
+INFO: Client nick1 on /127.0.0.1 came in
+2019.12.01 13:47:04 MSK ThreadID: 18
+INFO: nick1 changed Nickname to nick11
+2019.12.01 13:48:24 MSK ThreadID: 18
+INFO: Client nick11 on /127.0.0.1 came out
+2019.12.01 13:48:24 MSK ThreadID: 18
+INFO: nick11 thread is closed
+2019.12.01 13:48:33 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53235 8189
+2019.12.01 13:48:33 MSK ThreadID: 19
+INFO: Client nick11 on /127.0.0.1 came in
+2019.12.01 13:48:56 MSK ThreadID: 19
+INFO: nick11 changed Nickname to nick1
+2019.12.01 13:50:41 MSK ThreadID: 19
+INFO: Client nick1 on /127.0.0.1 came out
+2019.12.01 13:50:41 MSK ThreadID: 19
+INFO: nick1 thread is closed
+2019.12.01 13:52:13 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53283 8189
+2019.12.01 13:52:13 MSK ThreadID: 20
+WARNING: /127.0.0.1 Неверный логин/пароль login1
+2019.12.01 13:52:20 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53285 8189
+2019.12.01 13:52:20 MSK ThreadID: 21
+INFO: Client nick1 on /127.0.0.1 came in
+2019.12.01 13:52:28 MSK ThreadID: 21
+INFO: nick1 changed Nickname to nick11
+2019.12.01 13:52:57 MSK ThreadID: 20
+INFO: null thread is closed
+2019.12.01 13:52:57 MSK ThreadID: 21
+INFO: Client nick11 on /127.0.0.1 came out
+2019.12.01 13:52:57 MSK ThreadID: 21
+INFO: nick11 thread is closed
+2019.12.01 13:53:53 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53301 8189
+2019.12.01 13:53:53 MSK ThreadID: 22
+INFO: Client nick11 on /127.0.0.1 came in
+2019.12.01 13:54:19 MSK ThreadID: 22
+INFO: Client nick11 on /127.0.0.1 came out
+2019.12.01 13:54:19 MSK ThreadID: 22
+INFO: nick11 thread is closed
+2019.12.01 13:54:54 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53312 8189
+2019.12.01 13:54:54 MSK ThreadID: 23
+INFO: Client nick11 on /127.0.0.1 came in
+2019.12.01 13:54:58 MSK ThreadID: 23
+INFO: nick11 changed Nickname to nick1
+2019.12.01 13:55:03 MSK ThreadID: 23
+INFO: nick1 changed Nickname to nick11
+2019.12.01 13:55:10 MSK ThreadID: 23
+INFO: nick11 changed Nickname to nick111
+2019.12.01 13:56:46 MSK ThreadID: 23
+INFO: Client nick111 on /127.0.0.1 came out
+2019.12.01 13:56:46 MSK ThreadID: 23
+INFO: nick111 thread is closed
+2019.12.01 13:57:01 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53347 8189
+2019.12.01 13:57:01 MSK ThreadID: 24
+INFO: Client nick111 on /127.0.0.1 came in
+2019.12.01 13:57:14 MSK ThreadID: 24
+INFO: nick111 changed Nickname to nick1111
+2019.12.01 13:57:24 MSK ThreadID: 24
+INFO: Client nick1111 on /127.0.0.1 came out
+2019.12.01 13:57:24 MSK ThreadID: 24
+INFO: nick1111 thread is closed
+2019.12.01 13:58:26 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53374 8189
+2019.12.01 13:58:26 MSK ThreadID: 25
+INFO: Client nick1111 on /127.0.0.1 came in
+2019.12.01 13:58:39 MSK ThreadID: 25
+INFO: nick1111 changed Nickname to nick1
+2019.12.01 13:58:50 MSK ThreadID: 25
+INFO: Client nick1 on /127.0.0.1 came out
+2019.12.01 13:58:50 MSK ThreadID: 25
+INFO: nick1 thread is closed
+2019.12.01 14:00:16 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53396 8189
+2019.12.01 14:00:16 MSK ThreadID: 26
+INFO: Client nick1 on /127.0.0.1 came in
+2019.12.01 14:00:28 MSK ThreadID: 26
+INFO: nick1 changed Nickname to nick11
+2019.12.01 14:00:54 MSK ThreadID: 26
+INFO: Client nick11 on /127.0.0.1 came out
+2019.12.01 14:00:54 MSK ThreadID: 26
+INFO: nick11 thread is closed
+2019.12.01 14:02:03 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53421 8189
+2019.12.01 14:02:03 MSK ThreadID: 27
+INFO: Client nick11 on /127.0.0.1 came in
+2019.12.01 14:02:09 MSK ThreadID: 27
+INFO: nick11 changed Nickname to nick1
+2019.12.01 14:04:15 MSK ThreadID: 27
+INFO: Client nick1 on /127.0.0.1 came out
+2019.12.01 14:04:15 MSK ThreadID: 27
+INFO: nick1 thread is closed
+2019.12.01 14:04:25 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53456 8189
+2019.12.01 14:04:25 MSK ThreadID: 28
+INFO: Client nick1 on /127.0.0.1 came in
+2019.12.01 14:06:47 MSK ThreadID: 28
+INFO: Client nick1 on /127.0.0.1 came out
+2019.12.01 14:06:47 MSK ThreadID: 28
+INFO: nick1 thread is closed
+2019.12.01 14:06:57 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53476 8189
+2019.12.01 14:06:57 MSK ThreadID: 29
+INFO: Client nick1 on /127.0.0.1 came in
+2019.12.01 14:07:42 MSK ThreadID: 29
+INFO: nick1 changed Nickname to nick11
+2019.12.01 14:08:32 MSK ThreadID: 29
+INFO: Client nick11 on /127.0.0.1 came out
+2019.12.01 14:08:32 MSK ThreadID: 29
+INFO: nick11 thread is closed
+2019.12.01 14:08:56 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53507 8189
+2019.12.01 14:08:56 MSK ThreadID: 30
+INFO: Client nick11 on /127.0.0.1 came in
+2019.12.01 14:09:01 MSK ThreadID: 30
+INFO: nick11 changed Nickname to nick111
+2019.12.01 14:09:04 MSK ThreadID: 30
+INFO: nick111 changed Nickname to nick1111
+2019.12.01 14:09:11 MSK ThreadID: 30
+INFO: nick1111 changed Nickname to nick1
+2019.12.01 14:09:17 MSK ThreadID: 30
+INFO: Client nick1 on /127.0.0.1 came out
+2019.12.01 14:09:17 MSK ThreadID: 30
+INFO: nick1 thread is closed
+2019.12.01 14:10:01 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53527 8189
+2019.12.01 14:10:01 MSK ThreadID: 31
+INFO: Client nick1 on /127.0.0.1 came in
+2019.12.01 14:11:30 MSK ThreadID: 31
+INFO: nick1 changed Nickname to nick12
+2019.12.01 14:14:41 MSK ThreadID: 31
+INFO: nick12 changed Nickname to nick123
+2019.12.01 14:16:24 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53602 8189
+2019.12.01 14:16:24 MSK ThreadID: 32
+INFO: Client nick2 on /127.0.0.1 came in
+2019.12.01 14:16:34 MSK ThreadID: 32
+INFO: nick2 changed Nickname to nick22
+2019.12.01 14:17:34 MSK ThreadID: 31
+INFO: Client nick123 on /127.0.0.1 came out
+2019.12.01 14:17:34 MSK ThreadID: 31
+INFO: nick123 thread is closed
+2019.12.01 14:17:46 MSK ThreadID: 32
+INFO: nick22 changed Nickname to nick2
+2019.12.01 14:18:31 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53621 8189
+2019.12.01 14:18:32 MSK ThreadID: 33
+INFO: Client nick123 on /127.0.0.1 came in
+2019.12.01 14:18:42 MSK ThreadID: 33
+INFO: nick123 changed Nickname to nick1
+2019.12.01 14:19:10 MSK ThreadID: 32
+INFO: nick2 changed Nickname to nick12
+2019.12.01 14:19:30 MSK ThreadID: 32
+INFO: nick12 changed Nickname to nick2
+2019.12.01 14:19:55 MSK ThreadID: 32
+INFO: nick2 changed Nickname to nick21
+2019.12.01 14:20:32 MSK ThreadID: 32
+INFO: nick21 changed Nickname to nick2
+2019.12.01 14:20:53 MSK ThreadID: 32
+INFO: nick2 changed Nickname to nick13
+2019.12.01 14:22:46 MSK ThreadID: 32
+INFO: Client nick13 on /127.0.0.1 came out
+2019.12.01 14:22:46 MSK ThreadID: 32
+INFO: nick13 thread is closed
+2019.12.01 14:22:48 MSK ThreadID: 33
+INFO: Client nick1 on /127.0.0.1 came out
+2019.12.01 14:22:48 MSK ThreadID: 33
+INFO: nick1 thread is closed
+2019.12.01 14:22:52 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53663 8189
+2019.12.01 14:22:52 MSK ThreadID: 34
+INFO: Client nick1 on /127.0.0.1 came in
+2019.12.01 14:22:58 MSK ThreadID: 34
+INFO: nick1 changed Nickname to nick11
+2019.12.01 14:23:18 MSK ThreadID: 34
+INFO: Client nick11 on /127.0.0.1 came out
+2019.12.01 14:23:18 MSK ThreadID: 34
+INFO: nick11 thread is closed
+2019.12.01 14:24:44 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53678 8189
+2019.12.01 14:24:44 MSK ThreadID: 35
+INFO: Client nick11 on /127.0.0.1 came in
+2019.12.01 14:24:48 MSK ThreadID: 35
+INFO: nick11 changed Nickname to nick1
+2019.12.01 14:25:28 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53697 8189
+2019.12.01 14:25:28 MSK ThreadID: 36
+INFO: Client nick13 on /127.0.0.1 came in
+2019.12.01 14:26:31 MSK ThreadID: 36
+INFO: nick13 changed Nickname to nick2
+2019.12.01 14:40:26 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53953 8189
+2019.12.01 14:40:26 MSK ThreadID: 37
+INFO: Client nick1 on /127.0.0.1 came out
+2019.12.01 14:40:26 MSK ThreadID: 37
+INFO: Thread of nick1 closed because was opened from another place
+2019.12.01 14:40:26 MSK ThreadID: 37
+INFO: Client nick1 on /127.0.0.1 came in
+2019.12.01 14:40:26 MSK ThreadID: 35
+INFO: nick1 thread is closed
+2019.12.01 14:40:32 MSK ThreadID: 37
+INFO: nick1 changed Nickname to nick11
+2019.12.01 14:40:45 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 53957 8189
+2019.12.01 14:40:45 MSK ThreadID: 38
+INFO: Client nick11 on /127.0.0.1 came out
+2019.12.01 14:40:45 MSK ThreadID: 38
+INFO: Thread of nick11 closed because was opened from another place
+2019.12.01 14:40:45 MSK ThreadID: 37
+INFO: nick11 thread is closed
+2019.12.01 14:40:45 MSK ThreadID: 38
+INFO: Client nick11 on /127.0.0.1 came in
+2019.12.01 14:40:58 MSK ThreadID: 38
+INFO: nick11 changed Nickname to nick1
+2019.12.01 14:42:15 MSK ThreadID: 38
+INFO: Client nick1 on /127.0.0.1 came out
+2019.12.01 14:42:15 MSK ThreadID: 38
+INFO: nick1 thread is closed
+2019.12.01 14:45:56 MSK ThreadID: 1
+INFO: Server started... Waiting clients...
+2019.12.01 14:46:16 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 54023 8189
+2019.12.01 14:46:16 MSK ThreadID: 12
+INFO: Client nick1 on /127.0.0.1 came in
+2019.12.01 14:46:32 MSK ThreadID: 12
+INFO: nick1 changed Nickname to nick11
+2019.12.01 14:46:39 MSK ThreadID: 12
+INFO: nick11 changed Nickname to nick1
+2019.12.01 14:47:20 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 54036 8189
+2019.12.01 14:47:20 MSK ThreadID: 13
+INFO: Client nick2 on /127.0.0.1 came in
+2019.12.01 14:47:49 MSK ThreadID: 12
+INFO: nick1 changed Nickname to nick11
+2019.12.01 14:47:56 MSK ThreadID: 12
+INFO: nick11 changed Nickname to nick1
+2019.12.01 14:48:01 MSK ThreadID: 12
+INFO: Client nick1 on /127.0.0.1 came out
+2019.12.01 14:48:01 MSK ThreadID: 12
+INFO: nick1 thread is closed
+2019.12.01 14:48:02 MSK ThreadID: 13
+INFO: Client nick2 on /127.0.0.1 came out
+2019.12.01 14:48:02 MSK ThreadID: 13
+INFO: nick2 thread is closed
+2019.12.01 14:50:23 MSK ThreadID: 1
+INFO: Client connected /127.0.0.1 54061 8189
+2019.12.01 14:50:23 MSK ThreadID: 14
+INFO: Client nick1 on /127.0.0.1 came in
