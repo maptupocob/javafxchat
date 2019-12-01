@@ -1,6 +1,6 @@
 package ru.jchat.core.server;
 
-public class ServerMain {
+class ServerMain {
     public static void main(String[] args) {
         new Server();
     }

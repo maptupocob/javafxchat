@@ -7,14 +7,14 @@ public class Message {
     private String senderNick;
     private String addressNick;
     private String text;
-    private Date date;
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
 
     public int getType() {
         return type;
     }
 
-    private int type;
-    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
+    private final Date date;
+    private final int type;
     public static final int BROADCAST_SERVICE_MESSAGE = 1;
     public static final int BROADCAST_INFORMATION_MESSAGE = 10;
     public static final int BROADCAST_MESSAGE = 2;

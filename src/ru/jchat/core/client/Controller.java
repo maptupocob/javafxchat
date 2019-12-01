@@ -8,27 +8,18 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import ru.jchat.core.Message;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-
-//CREATE TABLE users (
-//    id       INTEGER PRIMARY KEY AUTOINCREMENT,
-//            login    TEXT    UNIQUE,
-//            password TEXT,
-//            nick     TEXT    UNIQUE
-//            );
-
 
 public class Controller implements Initializable {
 
@@ -55,9 +46,9 @@ public class Controller implements Initializable {
     private String myNick;
     private Message inMessage;
     private Message outMessage;
-    private ObservableList<String> observableMemberList = FXCollections.observableArrayList();
-    private Gson gson = new GsonBuilder().create();
-
+    private final ObservableList<String> observableMemberList = FXCollections.observableArrayList();
+    private final Gson gson = new GsonBuilder().create();
+    private String path = "history/";
     private final String SERVER_IP = "localhost";
     private final int SERVER_PORT = 8189;
 
@@ -68,21 +59,22 @@ public class Controller implements Initializable {
             authPanel.setVisible(false);
             authPanel.setManaged(false);
             tabPane.setVisible(true);
+            memberListView.setVisible(true);
         } else {
             msgPanel.setVisible(false);
             msgPanel.setManaged(false);
             authPanel.setVisible(true);
             authPanel.setManaged(true);
             tabPane.setVisible(false);
+            memberListView.setVisible(false);
         }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         memberListView.setItems(observableMemberList);
         setAuthorized(false);
-        tabPane.getTabs().add(new DialogTab(GENERAL));
+        memberListView.setCellFactory(TextFieldListCell.forListView());
     }
 
     private void startListeningSocket() {
@@ -107,21 +99,32 @@ public class Controller implements Initializable {
                             String[] arr = inMessage.getText().substring(6).split("\\s");
                             Platform.runLater(() -> observableMemberList.setAll(arr));
                         } else {
-                            getDialogTab(GENERAL).getTextArea().appendText(inMessage.toString());
+//                            for future feature
+//                            displayAndSaveMessage(GENERAL, inMessage);
                         }
-                    } else if ((inMessage.getType() == Message.PRIVATE_SERVICE_MESSAGE)) {
-                        if (inMessage.getText().equals("Opened from another place")){
+                    } else if (inMessage.getType() == Message.BROADCAST_INFORMATION_MESSAGE) {
+                        if (inMessage.getText().contains("changed Nickname to")) {
+                            String oldNick = inMessage.getText().split("\\s")[0];
+                            String newNick = inMessage.getText().split("\\s")[4];
+                            changeTabNameAndFileName(oldNick, newNick);
+                            if (oldNick.equals(myNick)) {
+                                changeHistoryFolderName(newNick);
+                                myNick = newNick;
+                            }
+                        }
+                        displayAndSaveMessage(GENERAL, inMessage);
+                    } else if (inMessage.getType() == Message.PRIVATE_SERVICE_MESSAGE) {
+                        if (inMessage.getText().equals("Opened from another place")) {
                             showAlert(inMessage.getText());
                             break;
-                        }
-                        else {
-                            getDialogTab(GENERAL).getTextArea().appendText(inMessage.toString());
+                        } else {
+                            displayAndSaveMessage(GENERAL, inMessage);
                             System.out.println(inMessage);
                         }
                     } else {
                         System.out.println(s);
                         String tabName = inMessage.getAddressNick().equals(myNick) ? inMessage.getSenderNick() : inMessage.getAddressNick();
-                        getDialogTab(tabName).getTextArea().appendText(inMessage.toString());
+                        displayAndSaveMessage(tabName, inMessage);
                     }
                 }
             } catch (IOException e) {
@@ -139,16 +142,66 @@ public class Controller implements Initializable {
         t.start();
     }
 
-    private DialogTab getDialogTab(String contactNick) {
+    private void changeHistoryFolderName(String newNick) {
+        File historyFile = new File(path + "/" + myNick);
+        if (historyFile.exists()) {
+            historyFile.renameTo(new File(path + "/" + newNick));
+        }
+    }
+
+    private void changeTabNameAndFileName(String oldNick, String newNick) {
         List<Tab> tabs = tabPane.getTabs();
         for (Tab tab : tabs) {
-            if (tab.getText().equals(contactNick)) {
-                System.out.println(tab.getText());
+            if (tab.getText().equals(oldNick)) {
+                Platform.runLater(() -> {
+                            tab.setId(newNick);
+                            tab.setText(newNick);
+                        }
+                );
+            }
+        }
+        String fullPath = path + myNick + "/";
+        File historyFile = new File(fullPath + oldNick + ".his");
+        if (historyFile.exists()) {
+            historyFile.renameTo(new File(fullPath + newNick + ".his"));
+        }
+    }
+
+    private void displayAndSaveMessage(String nickName, Message msg) {
+        getDialogTab(nickName).getTextArea().appendText(msg.toString());
+        String fileName = nickName.equals(GENERAL) ? "General" : nickName;
+        String filePath = path + "/" + myNick + "/";
+        File directory = new File(filePath);
+        if (!directory.exists()) directory.mkdirs();
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath + fileName + ".his", true))) {
+            writer.println(gson.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private DialogTab getDialogTab(String nickName) {
+        List<Tab> tabs = tabPane.getTabs();
+        for (Tab tab : tabs) {
+            if (tab.getText().equals(nickName)) {
                 return (DialogTab) tab;
             }
         }
-        DialogTab newTab = new DialogTab(contactNick);
+        DialogTab newTab = new DialogTab(nickName);
         Platform.runLater(() -> tabPane.getTabs().add(newTab));
+        String fileName = nickName.equals(GENERAL) ? "General" : nickName;
+        String filePath = path + "/" + myNick + "/";
+        File directory = new File(filePath);
+        if (!directory.exists()) directory.mkdirs();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath + fileName + ".his"))) {
+            String msg = null;
+            while ((msg = reader.readLine()) != null) {
+                newTab.getTextArea().appendText(gson.fromJson(msg, Message.class).toString());
+            }
+        } catch (IOException e) {
+//            e.printStackTrace();
+        }
+        newTab.getTextArea().appendText("---------------------------------------------------------" + "\n");
         return newTab;
     }
 
@@ -162,7 +215,6 @@ public class Controller implements Initializable {
             out.writeUTF(gson.toJson(outMessage));
             loginField.clear();
             passField.clear();
-
         } catch (Exception e) {
             showAlert("Не удалось авторизоваться на сервере\n" + e.getMessage());
         }
@@ -188,8 +240,15 @@ public class Controller implements Initializable {
         }
     }
 
-    public void changeNick() {
-        Message msg = new Message(Message.PRIVATE_SERVICE_MESSAGE, "/cn " + msgField.getText(), new Date());
+    public void rightClick() {
+        if (!memberListView.getSelectionModel().getSelectedItem().equals(myNick)) return;
+        int index = memberListView.getSelectionModel().getSelectedIndex();
+        memberListView.edit(index);
+    }
+
+    public void changeNick(ListView.EditEvent editEvent) {
+        if (editEvent.getNewValue().equals("") || editEvent.getNewValue().equals(myNick)) return;
+        Message msg = new Message(Message.PRIVATE_SERVICE_MESSAGE, "/cn " + editEvent.getNewValue(), new Date());
         msgField.clear();
         msgField.requestFocus();
         try {
@@ -218,5 +277,4 @@ public class Controller implements Initializable {
             alert.showAndWait();
         });
     }
-
 }

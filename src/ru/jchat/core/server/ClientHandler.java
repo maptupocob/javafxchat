@@ -18,17 +18,7 @@ class ClientHandler {
     private Message inMessage;
     private Message outMessage;
     private Gson gson;
-
-
-    void setNick(String nick) {
-        this.nick = nick;
-    }
-
     private String nick;
-
-    String getNick() {
-        return nick;
-    }
 
     ClientHandler(Server server, Socket socket) {
         try {
@@ -55,14 +45,13 @@ class ClientHandler {
                                     nick = newNick;
                                     server.closeExistingConnection(newNick);
                                     Thread.currentThread().setName(nick);
-
-//                                System.out.println(nick);
                                     outMessage = new Message(Message.AUTHENTICATION_OK, nick, new Date());
                                     sendMsg(outMessage);
                                     server.subscribe(this);
                                     break;
                                 } else {
                                     outMessage = new Message(Message.AUTHENTICATION_DENY, "Неверный логин/пароль", new Date());
+                                    server.getLog().warning(socket.getInetAddress() + " Неверный логин/пароль " + data[0]);
                                     sendMsg(outMessage);
                                 }
                             }
@@ -94,11 +83,11 @@ class ClientHandler {
                         }
                     }
                 } catch (IOException e) {
-                    if (e.getMessage().equals("Connection reset")) {
-                        server.clientExit(this);
+                    if ((e.getMessage() != null) && (e.getMessage().equals("Connection reset"))) {
                     } else {
-                        e.printStackTrace();
+//                        e.printStackTrace();
                     }
+                    server.unsubscribe(this);
                 } finally {
                     server.unsubscribe(this);
                     try {
@@ -107,12 +96,23 @@ class ClientHandler {
                         e.printStackTrace();
                     }
                 }
-                System.out.println(nick + " thread is closed");
+                server.getLog().info(nick + " thread is closed");
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    void setNick(String nick) {
+        this.nick = nick;
+    }
+
+    String getNick() {
+        return nick;
+    }
+
+    Socket getSocket() {
+        return socket;
     }
 
     void sendMsg(Message msg) {
